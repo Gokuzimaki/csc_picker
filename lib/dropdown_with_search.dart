@@ -88,7 +88,7 @@ class DropdownWithSearch<T> extends StatelessWidget {
     }
 
     double contentHeight(){
-      return hasLabel == true ? selectedItemHeight! -15 : selectedItemHeight!;
+      return hasLabel == true ? selectedItemHeight! - 20 : selectedItemHeight!;
     }
 
 
