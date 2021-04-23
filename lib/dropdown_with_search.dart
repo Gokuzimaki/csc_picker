@@ -1,32 +1,54 @@
 import 'package:flutter/material.dart';
-
+enum Layout { vertical, horizontal }
 class DropdownWithSearch<T> extends StatelessWidget {
+
   final String title;
   final String placeHolder;
   final T selected;
   final List items;
   final EdgeInsets? selectedItemPadding;
   final TextStyle? selectedItemStyle;
+  final double? selectedItemHeight;
   final TextStyle? dropdownHeadingStyle;
   final TextStyle? itemStyle;
   final BoxDecoration? decoration, disabledDecoration;
-  final double? searchBarRadius;
+  final double? searchBarRadius,labelPositionTop,labelPositionLeft;
+  final double? iconSize;
   final double? dialogRadius;
-  final bool disabled;
-
+  final bool disabled,isElevated;
+  final Layout layout;
   final Function onChanged;
-
+  final IconData? pointerIcon;
+  final bool hasLabel;
+  final String? labelText;
+  final TextStyle? labelTextStyle;
+  final BoxShadow? boxShadow;
   const DropdownWithSearch(
       {Key? key,
+      /// The title of the field
       required this.title,
       required this.placeHolder,
       required this.items,
       required this.selected,
       required this.onChanged,
-      this.selectedItemPadding,
+      this.selectedItemPadding = const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
       this.selectedItemStyle,
+      this.selectedItemHeight = 50,
       this.dropdownHeadingStyle,
       this.itemStyle,
+      this.pointerIcon = Icons.keyboard_arrow_down_rounded,
+      this.layout = Layout.horizontal,
+      this.hasLabel = false,
+      this.isElevated = false,
+      this.boxShadow,
+      this.labelText = 'Label Text',
+      this.labelPositionTop = 20,
+      this.labelPositionLeft = 10,
+      this.labelTextStyle = const TextStyle(
+        color: Colors.black,
+        fontSize: 12,
+      ),
+      this.iconSize = 25,
       this.decoration,
       this.disabledDecoration,
       this.searchBarRadius,
@@ -34,8 +56,60 @@ class DropdownWithSearch<T> extends StatelessWidget {
       this.disabled = false})
       : super(key: key);
 
+
   @override
   Widget build(BuildContext context) {
+
+
+    Widget labelTextOutputPlain (){
+      return hasLabel == true ? Container(
+        padding: EdgeInsets.only(left:8, top: 8, right: 8,),
+        height: 25,
+        width: double.maxFinite,
+        child: Text(
+              labelText!,
+              style: labelTextStyle,
+            ),
+      ) : SizedBox(width:0,height: 0,);
+    }
+
+    BoxShadow elevatedShadow(){
+      if(isElevated == true && boxShadow != null){
+        return boxShadow!;
+      }
+
+      return BoxShadow(
+        color: isElevated == false ? Colors.transparent :Colors.black.withOpacity(0.3),
+        offset: Offset.fromDirection(20,4),
+        blurRadius: 5,
+        spreadRadius: 0,
+      );
+    }
+
+
+    BoxDecoration? containerDecor(){
+      return !disabled
+        ? decoration != null
+        ? decoration
+        : BoxDecoration(
+        borderRadius: BorderRadius.all(Radius.circular(5)),
+        color: Colors.white,
+        border: Border.all(
+            color: Colors.grey.shade300,
+            width: 1),
+        )
+        : disabledDecoration != null
+        ? disabledDecoration
+          : BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(5)),
+          color: Colors.grey.shade300,
+          border: Border.all(
+              color: Colors.grey.shade300,
+              width: 1,
+          )
+        );
+    }
+
     return AbsorbPointer(
       absorbing: disabled,
       child: GestureDetector(
@@ -63,32 +137,60 @@ class DropdownWithSearch<T> extends StatelessWidget {
           });
         },
         child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-          decoration: !disabled
-              ? decoration != null
-                  ? decoration
-                  : BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(5)),
-                      color: Colors.white,
-                      border: Border.all(color: Colors.grey.shade300, width: 1))
-              : disabledDecoration != null
-                  ? disabledDecoration
-                  : BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(5)),
-                      color: Colors.grey.shade300,
-                      border:
-                          Border.all(color: Colors.grey.shade300, width: 1)),
-          child: Row(
-            children: [
-              Expanded(
-                  child: Text(selected.toString(),
-                      overflow: TextOverflow.ellipsis,
-                      style: selectedItemStyle != null
-                          ? selectedItemStyle
-                          : TextStyle(fontSize: 14))),
-              Icon(Icons.keyboard_arrow_down_rounded)
+          height: selectedItemHeight! + 10.0,
+          width: double.maxFinite,
+          margin: EdgeInsets.only(bottom: 10),
+          decoration: BoxDecoration(
+            boxShadow: [
+              elevatedShadow(),
             ],
           ),
+          child: Container(
+            decoration: containerDecor(),
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: hasLabel == true ? MainAxisAlignment.start: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                labelTextOutputPlain(),
+                // Text('Hello World'),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Expanded(
+                      // fit: FlexFit.loose,
+                      flex: 9,
+                      child: Container(
+                        height: hasLabel == true ? selectedItemHeight! -15 : selectedItemHeight!,
+                        padding: selectedItemPadding,
+                        child: Text(
+                          selected.toString() == "Country"
+                            || selected.toString() == "State"
+                            || selected.toString() == "City"
+                            ? title : selected.toString(),
+                          overflow: TextOverflow.ellipsis,
+                          style: selectedItemStyle != null
+                              ? selectedItemStyle
+                              : TextStyle(fontSize: 18),
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      // fit: FlexFit.loose,
+                      flex: 3,
+                      child: Icon(
+                        pointerIcon,
+                        color: Colors.black,
+                        size: iconSize,
+                      ),
+                    ),
+
+                  ],
+                ),
+              ],
+            ),
+          ),
+
         ),
       ),
     );

@@ -21,9 +21,10 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
-
   final String title;
+
+  MyHomePage({Key? key, this.title='',}) : super(key: key);
+
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
@@ -32,8 +33,8 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   /// Variables to store country state city data in onChanged method.
   String countryValue = "";
-  String stateValue = "";
-  String cityValue = "";
+  String? stateValue = "";
+  String? cityValue = "";
   String address = "";
 
   @override
@@ -54,30 +55,34 @@ class _MyHomePageState extends State<MyHomePage> {
                   showStates: true,
 
                   /// Enable disable city drop down [OPTIONAL PARAMETER]
-                  showCities: true,
-
+                  showCities: false,
+                  defaultTitle: 'Your Country',
+                  defaultTitleState: 'Your Location',
                   ///Enable (get flat with country name) / Disable (Disable flag) / ShowInDropdownOnly (display flag in dropdown only) [OPTIONAL PARAMETER]
                   flagState: CountryFlag.SHOW_IN_DROP_DOWN_ONLY,
 
+                  layout: Layout.vertical,
+
                   ///Dropdown box decoration to style your dropdown selector [OPTIONAL PARAMETER] (USE with disabledDropdownDecoration)
                   dropdownDecoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(30)),
-                      color: Colors.white,
-                      border:
-                          Border.all(color: Colors.grey.shade300, width: 1)),
+                      borderRadius: BorderRadius.all(Radius.circular(5)),
+                      color: Colors.yellow,
+                      border: Border.all(color: Colors.transparent, width:0)),
 
                   ///Disabled Dropdown box decoration to style your dropdown selector [OPTIONAL PARAMETER]  (USE with disabled dropdownDecoration)
                   disabledDropdownDecoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(30)),
+                      borderRadius: BorderRadius.all(Radius.circular(5)),
                       color: Colors.grey.shade300,
                       border:
-                          Border.all(color: Colors.grey.shade300, width: 1)),
+                          Border.all(color: Colors.grey.shade300, width: 0)),
 
                   ///selected item style [OPTIONAL PARAMETER]
                   selectedItemStyle: TextStyle(
                     color: Colors.black,
-                    fontSize: 14,
+                    fontSize: 20,
                   ),
+
+                  hasLabel: false,
 
                   ///DropdownDialog Heading style [OPTIONAL PARAMETER]
                   dropdownHeadingStyle: TextStyle(
@@ -96,6 +101,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
                   ///Search bar radius [OPTIONAL PARAMETER]
                   searchBarRadius: 10.0,
+                  selectedItemHeight: 56,
+                  selectedItemPadding: EdgeInsets.only(top:15, left: 15),
 
                   ///triggers once country selected in dropdown
                   onCountryChanged: (value) {
@@ -104,6 +111,8 @@ class _MyHomePageState extends State<MyHomePage> {
                       countryValue = value;
                     });
                   },
+
+
 
                   ///triggers once state selected in dropdown
                   onStateChanged: (value) {

@@ -15,32 +15,54 @@ class CSCPicker extends StatefulWidget {
   final ValueChanged<String?>? onCityChanged;
 
   ///Parameters to change style of CSC Picker
-  final TextStyle? selectedItemStyle, dropdownHeadingStyle, dropdownItemStyle;
+  final TextStyle? selectedItemStyle, labelStyle, dropdownHeadingStyle, dropdownItemStyle;
   final BoxDecoration? dropdownDecoration, disabledDropdownDecoration;
   final bool showStates, showCities;
   final CountryFlag flagState;
   final Layout layout;
-  final double? searchBarRadius;
-  final double? dropdownDialogRadius;
+  final double? searchBarRadius, selectedItemHeight;
+  final String defaultTitle,defaultTitleState,defaultTitleCity;
+  final String? selectedItemPlaceholder,selectedItemPlaceholderState, selectedItemPlaceholderCity;
+
+
+  final double? dropdownDialogRadius,labelPositionTop,labelPositionLeft;
+  final EdgeInsets? selectedItemPadding;
+  final bool hasLabel;
+  final String labelText;
+  final IconData pointerIcon;
 
   ///CSC Picker Constructor
-  const CSCPicker(
-      {Key? key,
-      this.onCountryChanged,
-      this.onStateChanged,
-      this.onCityChanged,
-      this.selectedItemStyle,
-      this.dropdownHeadingStyle,
-      this.dropdownItemStyle,
-      this.dropdownDecoration,
-      this.disabledDropdownDecoration,
-      this.searchBarRadius,
-      this.dropdownDialogRadius,
-      this.flagState = CountryFlag.ENABLE,
-      this.layout = Layout.horizontal,
-      this.showStates = true,
-      this.showCities = true})
-      : super(key: key);
+  const CSCPicker({
+        Key? key,
+        this.onCountryChanged,
+        this.onStateChanged,
+        this.onCityChanged,
+        this.selectedItemStyle,
+        this.selectedItemHeight,
+        this.selectedItemPadding,
+        this.selectedItemPlaceholder,
+        this.selectedItemPlaceholderState,
+        this.selectedItemPlaceholderCity,
+        this.pointerIcon = Icons.keyboard_arrow_down_rounded,
+        this.hasLabel = false,
+        this.labelText = 'Choose',
+        this.labelStyle,
+        this.labelPositionTop,
+        this.labelPositionLeft,
+        this.defaultTitle = "Country",
+        this.defaultTitleState = "State",
+        this.defaultTitleCity = "City",
+        this.dropdownHeadingStyle,
+        this.dropdownItemStyle,
+        this.dropdownDecoration,
+        this.disabledDropdownDecoration,
+        this.searchBarRadius,
+        this.dropdownDialogRadius,
+        this.flagState = CountryFlag.ENABLE,
+        this.layout = Layout.horizontal,
+        this.showStates = true,
+        this.showCities = true,
+    }) : super(key: key);
 
   @override
   _CSCPickerState createState() => _CSCPickerState();
@@ -218,43 +240,59 @@ class _CSCPickerState extends State<CSCPicker> {
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisSize: MainAxisSize.max,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         widget.layout == Layout.vertical
             ? Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  countryDropdown(),
+                  countryDropdown(title: widget.defaultTitle,
+                      placeholder: widget.selectedItemPlaceholder),
                   SizedBox(
                     height: 10.0,
                   ),
-                  stateDropdown(),
+                  stateDropdown(title: widget.defaultTitleState,
+                      placeholder: widget.selectedItemPlaceholderState),
                   SizedBox(
                     height: 10.0,
                   ),
-                  cityDropdown()
+                  cityDropdown(title: widget.defaultTitleCity,
+                      placeholder: widget.selectedItemPlaceholderCity)
                 ],
               )
             : Column(
                 children: [
                   Row(
+                    mainAxisSize: MainAxisSize.max,
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
-                      Expanded(child: countryDropdown()),
+                      Expanded(/*fit: FlexFit.loose,*/
+                        flex: 6,
+                        child: countryDropdown(title: widget.defaultTitle,
+                            placeholder: widget.selectedItemPlaceholder),
+                      ),
                       widget.showStates
                           ? SizedBox(
                               width: 10.0,
                             )
                           : Container(),
                       widget.showStates
-                          ? Expanded(child: stateDropdown())
-                          : Container(),
+                          ?
+                      Expanded(/*fit: FlexFit.loose,*/
+                        flex: 6,
+                        child: stateDropdown(title: widget.defaultTitleState,
+                            placeholder: widget.selectedItemPlaceholderState)
+                      )
+                      : Container(),
                     ],
                   ),
                   SizedBox(
                     height: 10.0,
                   ),
                   widget.showStates && widget.showCities
-                      ? cityDropdown()
+                      ? cityDropdown(title: widget.defaultTitleCity,
+                      placeholder: widget.selectedItemPlaceholderCity)
                       : Container()
                 ],
               ),
@@ -297,13 +335,21 @@ class _CSCPickerState extends State<CSCPicker> {
   }
 
   ///Country Dropdown Widget
-  Widget countryDropdown() {
+  Widget countryDropdown({title,Layout layout:Layout.horizontal,placeholder:'Search Country',}) {
     return DropdownWithSearch(
-      title: "Country",
-      placeHolder: "Search Country",
+      title: title,
+      placeHolder: placeholder,
       selectedItemStyle: widget.selectedItemStyle,
       dropdownHeadingStyle: widget.dropdownHeadingStyle,
+      selectedItemHeight: widget.selectedItemHeight,
+      selectedItemPadding: widget.selectedItemPadding,
       itemStyle: widget.dropdownItemStyle,
+      hasLabel: widget.hasLabel,
+      labelText: widget.labelText,
+      labelTextStyle: widget.labelStyle,
+      labelPositionTop: widget.labelPositionTop,
+      labelPositionLeft: widget.labelPositionLeft,
+      pointerIcon: widget.pointerIcon,
       decoration: widget.dropdownDecoration,
       disabledDecoration: widget.disabledDropdownDecoration,
       disabled: _country.length == 0 ? true : false,
@@ -325,10 +371,10 @@ class _CSCPickerState extends State<CSCPicker> {
   }
 
   ///State Dropdown Widget
-  Widget stateDropdown() {
+  Widget stateDropdown({title, placeholder:'Search State'}) {
     return DropdownWithSearch(
-      title: "State",
-      placeHolder: "Search State",
+      title: title,
+      placeHolder: placeholder,
       disabled: _states.length == 0 ? true : false,
       items: _states.map((String? dropDownStringItem) {
         return dropDownStringItem;
@@ -336,6 +382,14 @@ class _CSCPickerState extends State<CSCPicker> {
       selectedItemStyle: widget.selectedItemStyle,
       dropdownHeadingStyle: widget.dropdownHeadingStyle,
       itemStyle: widget.dropdownItemStyle,
+      hasLabel: widget.hasLabel,
+      labelText: widget.labelText,
+      labelTextStyle: widget.labelStyle,
+      labelPositionTop: widget.labelPositionTop,
+      labelPositionLeft: widget.labelPositionLeft,
+      pointerIcon: widget.pointerIcon,
+      selectedItemHeight: widget.selectedItemHeight,
+      selectedItemPadding: widget.selectedItemPadding,
       decoration: widget.dropdownDecoration,
       dialogRadius: widget.dropdownDialogRadius,
       searchBarRadius: widget.searchBarRadius,
@@ -352,10 +406,10 @@ class _CSCPickerState extends State<CSCPicker> {
   }
 
   ///City Dropdown Widget
-  Widget cityDropdown() {
+  Widget cityDropdown({ title, placeholder: 'Search City'}) {
     return DropdownWithSearch(
-      title: "City",
-      placeHolder: "Search City",
+      title: title,
+      placeHolder: placeholder,
       disabled: _cities.length == 0 ? true : false,
       items: _cities.map((String? dropDownStringItem) {
         return dropDownStringItem;
@@ -363,6 +417,14 @@ class _CSCPickerState extends State<CSCPicker> {
       selectedItemStyle: widget.selectedItemStyle,
       dropdownHeadingStyle: widget.dropdownHeadingStyle,
       itemStyle: widget.dropdownItemStyle,
+      hasLabel: widget.hasLabel,
+      labelText: widget.labelText,
+      labelTextStyle: widget.labelStyle,
+      labelPositionTop: widget.labelPositionTop,
+      labelPositionLeft: widget.labelPositionLeft,
+      pointerIcon: widget.pointerIcon,
+      selectedItemHeight: widget.selectedItemHeight,
+      selectedItemPadding: widget.selectedItemPadding,
       decoration: widget.dropdownDecoration,
       dialogRadius: widget.dropdownDialogRadius,
       searchBarRadius: widget.searchBarRadius,
