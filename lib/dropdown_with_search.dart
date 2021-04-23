@@ -6,7 +6,7 @@ class DropdownWithSearch<T> extends StatelessWidget {
   final String placeHolder;
   final T selected;
   final List items;
-  final EdgeInsets? selectedItemPadding;
+  final EdgeInsets? selectedItemPadding,selectedIconPadding;
   final TextStyle? selectedItemStyle;
   final double? selectedItemHeight;
   final TextStyle? dropdownHeadingStyle;
@@ -31,9 +31,10 @@ class DropdownWithSearch<T> extends StatelessWidget {
       required this.items,
       required this.selected,
       required this.onChanged,
-      this.selectedItemPadding = const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+      this.selectedItemPadding = const EdgeInsets.symmetric(horizontal: 15, vertical: 12),
+      this.selectedIconPadding = const EdgeInsets.only(bottom: 0,),
       this.selectedItemStyle,
-      this.selectedItemHeight = 50,
+      this.selectedItemHeight = 56,
       this.dropdownHeadingStyle,
       this.itemStyle,
       this.pointerIcon = Icons.keyboard_arrow_down_rounded,
@@ -85,6 +86,11 @@ class DropdownWithSearch<T> extends StatelessWidget {
         spreadRadius: 0,
       );
     }
+
+    double contentHeight(){
+      return hasLabel == true ? selectedItemHeight! -15 : selectedItemHeight!;
+    }
+
 
 
     BoxDecoration? containerDecor(){
@@ -161,7 +167,7 @@ class DropdownWithSearch<T> extends StatelessWidget {
                       // fit: FlexFit.loose,
                       flex: 9,
                       child: Container(
-                        height: hasLabel == true ? selectedItemHeight! -15 : selectedItemHeight!,
+                        height: contentHeight(),
                         padding: selectedItemPadding,
                         child: Text(
                           selected.toString() == "Country"
@@ -178,10 +184,14 @@ class DropdownWithSearch<T> extends StatelessWidget {
                     Expanded(
                       // fit: FlexFit.loose,
                       flex: 3,
-                      child: Icon(
-                        pointerIcon,
-                        color: Colors.black,
-                        size: iconSize,
+                      child: Container(
+                        height: contentHeight(),
+                        padding: selectedIconPadding,
+                        child: Icon(
+                          pointerIcon,
+                          color: Colors.black,
+                          size: iconSize,
+                        ),
                       ),
                     ),
 

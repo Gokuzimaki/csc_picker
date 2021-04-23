@@ -10,13 +10,36 @@ enum Layout { vertical, horizontal }
 enum CountryFlag { SHOW_IN_DROP_DOWN_ONLY, ENABLE, DISABLE }
 
 class CSCPicker extends StatefulWidget {
+  /// Function to execute when selected country is changed
   final ValueChanged<String>? onCountryChanged;
+  /// Function to execute when selected state is changed
   final ValueChanged<String?>? onStateChanged;
+
+  /// Function to execute when selected city is changed
   final ValueChanged<String?>? onCityChanged;
 
-  ///Parameters to change style of CSC Picker
-  final TextStyle? selectedItemStyle, labelStyle, dropdownHeadingStyle, dropdownItemStyle;
-  final BoxDecoration? dropdownDecoration, disabledDropdownDecoration;
+  // Parameters to change style of CSC Picker
+  /// This Changes the style of the selection
+  /// text area
+  final TextStyle? selectedItemStyle;
+  /// This style affects the heading of the
+  /// dropdown search area
+  final TextStyle? dropdownHeadingStyle;
+  /// This affects the style of individual selection
+  /// text in the dropdown area
+  final TextStyle? dropdownItemStyle;
+
+  /// This changes the style of the label text
+  /// is the label is enabled
+  final TextStyle? labelStyle;
+
+  /// The BoxDecoration for the active selection
+  /// area, controls the box shadow, border radius
+  /// and other box related styling
+  final BoxDecoration? dropdownDecoration;
+  /// BoxDecoration for the disabled drop
+  final BoxDecoration? disabledDropdownDecoration;
+
   final bool showStates, showCities;
   final CountryFlag flagState;
   final Layout layout;
@@ -24,11 +47,11 @@ class CSCPicker extends StatefulWidget {
   final String defaultTitle,defaultTitleState,defaultTitleCity;
   final String? selectedItemPlaceholder,selectedItemPlaceholderState, selectedItemPlaceholderCity;
 
-
+  final BoxShadow? boxShadow;
   final double? dropdownDialogRadius,labelPositionTop,labelPositionLeft;
-  final EdgeInsets? selectedItemPadding;
-  final bool hasLabel;
-  final String labelText;
+  final EdgeInsets? selectedItemPadding,selectedIconPadding;
+  final bool hasLabel, isElevated;
+  final String labelText,labelTextState,labelTextCity;
   final IconData pointerIcon;
 
   ///CSC Picker Constructor
@@ -38,14 +61,19 @@ class CSCPicker extends StatefulWidget {
         this.onStateChanged,
         this.onCityChanged,
         this.selectedItemStyle,
-        this.selectedItemHeight,
-        this.selectedItemPadding,
+        this.selectedItemHeight = 56,
+        this.selectedItemPadding = const EdgeInsets.only(top:15, left: 15),
+        this.selectedIconPadding,
         this.selectedItemPlaceholder,
         this.selectedItemPlaceholderState,
         this.selectedItemPlaceholderCity,
         this.pointerIcon = Icons.keyboard_arrow_down_rounded,
         this.hasLabel = false,
+        this.isElevated = false,
+        this.boxShadow,
         this.labelText = 'Choose',
+        this.labelTextState = 'Choose',
+        this.labelTextCity = 'Choose',
         this.labelStyle,
         this.labelPositionTop,
         this.labelPositionLeft,
@@ -334,6 +362,13 @@ class _CSCPickerState extends State<CSCPicker> {
       return filteredList;
   }
 
+  EdgeInsets? getContentPadding(){
+    if(widget.hasLabel == true && widget.selectedItemPadding == const EdgeInsets.only(top:15, left: 15)){
+      return EdgeInsets.only(left: 10, top: 8);
+    }
+    return widget.selectedItemPadding;
+  }
+
   ///Country Dropdown Widget
   Widget countryDropdown({title,Layout layout:Layout.horizontal,placeholder:'Search Country',}) {
     return DropdownWithSearch(
@@ -342,9 +377,12 @@ class _CSCPickerState extends State<CSCPicker> {
       selectedItemStyle: widget.selectedItemStyle,
       dropdownHeadingStyle: widget.dropdownHeadingStyle,
       selectedItemHeight: widget.selectedItemHeight,
-      selectedItemPadding: widget.selectedItemPadding,
+      selectedItemPadding: getContentPadding(),
+      selectedIconPadding: widget.selectedIconPadding,
       itemStyle: widget.dropdownItemStyle,
       hasLabel: widget.hasLabel,
+      isElevated: widget.isElevated,
+      boxShadow: widget.boxShadow,
       labelText: widget.labelText,
       labelTextStyle: widget.labelStyle,
       labelPositionTop: widget.labelPositionTop,
@@ -383,13 +421,16 @@ class _CSCPickerState extends State<CSCPicker> {
       dropdownHeadingStyle: widget.dropdownHeadingStyle,
       itemStyle: widget.dropdownItemStyle,
       hasLabel: widget.hasLabel,
-      labelText: widget.labelText,
+      isElevated: widget.isElevated,
+      boxShadow: widget.boxShadow,
+      labelText: widget.labelTextState,
       labelTextStyle: widget.labelStyle,
       labelPositionTop: widget.labelPositionTop,
       labelPositionLeft: widget.labelPositionLeft,
       pointerIcon: widget.pointerIcon,
       selectedItemHeight: widget.selectedItemHeight,
-      selectedItemPadding: widget.selectedItemPadding,
+      selectedItemPadding: getContentPadding(),
+      selectedIconPadding: widget.selectedIconPadding,
       decoration: widget.dropdownDecoration,
       dialogRadius: widget.dropdownDialogRadius,
       searchBarRadius: widget.searchBarRadius,
@@ -418,13 +459,16 @@ class _CSCPickerState extends State<CSCPicker> {
       dropdownHeadingStyle: widget.dropdownHeadingStyle,
       itemStyle: widget.dropdownItemStyle,
       hasLabel: widget.hasLabel,
-      labelText: widget.labelText,
+      isElevated: widget.isElevated,
+      boxShadow: widget.boxShadow,
+      labelText: widget.labelTextCity,
       labelTextStyle: widget.labelStyle,
       labelPositionTop: widget.labelPositionTop,
       labelPositionLeft: widget.labelPositionLeft,
       pointerIcon: widget.pointerIcon,
       selectedItemHeight: widget.selectedItemHeight,
-      selectedItemPadding: widget.selectedItemPadding,
+      selectedItemPadding: getContentPadding(),
+      selectedIconPadding: widget.selectedIconPadding,
       decoration: widget.dropdownDecoration,
       dialogRadius: widget.dropdownDialogRadius,
       searchBarRadius: widget.searchBarRadius,

@@ -55,13 +55,15 @@ class _MyHomePageState extends State<MyHomePage> {
                   showStates: true,
 
                   /// Enable disable city drop down [OPTIONAL PARAMETER]
-                  showCities: false,
-                  defaultTitle: 'Your Country',
-                  defaultTitleState: 'Your Location',
+                  showCities: true,
+                  defaultTitle: 'Choose Country',
+
+                  defaultTitleState: 'Choose ',
+
                   ///Enable (get flat with country name) / Disable (Disable flag) / ShowInDropdownOnly (display flag in dropdown only) [OPTIONAL PARAMETER]
                   flagState: CountryFlag.SHOW_IN_DROP_DOWN_ONLY,
 
-                  layout: Layout.vertical,
+                  layout: Layout.horizontal,
 
                   ///Dropdown box decoration to style your dropdown selector [OPTIONAL PARAMETER] (USE with disabledDropdownDecoration)
                   dropdownDecoration: BoxDecoration(
@@ -82,7 +84,10 @@ class _MyHomePageState extends State<MyHomePage> {
                     fontSize: 20,
                   ),
 
-                  hasLabel: false,
+                  hasLabel: true,
+                  isElevated: true,
+                  labelText: 'Your Location',
+                  labelTextState: 'Your State' ,
 
                   ///DropdownDialog Heading style [OPTIONAL PARAMETER]
                   dropdownHeadingStyle: TextStyle(
@@ -101,8 +106,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
                   ///Search bar radius [OPTIONAL PARAMETER]
                   searchBarRadius: 10.0,
-                  selectedItemHeight: 56,
-                  selectedItemPadding: EdgeInsets.only(top:15, left: 15),
+                  // selectedItemPadding: EdgeInsets.only(top:15, left: 15),
 
                   ///triggers once country selected in dropdown
                   onCountryChanged: (value) {
