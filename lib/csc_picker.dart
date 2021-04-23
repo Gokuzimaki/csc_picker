@@ -63,7 +63,7 @@ class CSCPicker extends StatefulWidget {
         this.selectedItemStyle,
         this.selectedItemHeight = 56,
         this.selectedItemPadding = const EdgeInsets.only(top:15, left: 15),
-        this.selectedIconPadding,
+        this.selectedIconPadding = const EdgeInsets.only(bottom: 0,),
         this.selectedItemPlaceholder,
         this.selectedItemPlaceholderState,
         this.selectedItemPlaceholderCity,
@@ -369,6 +369,14 @@ class _CSCPickerState extends State<CSCPicker> {
     return widget.selectedItemPadding;
   }
 
+  EdgeInsets? getIconPadding(){
+
+    if(widget.hasLabel == true && widget.selectedIconPadding == const EdgeInsets.only(bottom: 0,)){
+      return EdgeInsets.only(bottom: 20,);
+    }
+    return widget.selectedIconPadding;
+  }
+
   ///Country Dropdown Widget
   Widget countryDropdown({title,Layout layout:Layout.horizontal,placeholder:'Search Country',}) {
     return DropdownWithSearch(
@@ -378,7 +386,7 @@ class _CSCPickerState extends State<CSCPicker> {
       dropdownHeadingStyle: widget.dropdownHeadingStyle,
       selectedItemHeight: widget.selectedItemHeight,
       selectedItemPadding: getContentPadding(),
-      selectedIconPadding: widget.selectedIconPadding,
+      selectedIconPadding: getIconPadding(),
       itemStyle: widget.dropdownItemStyle,
       hasLabel: widget.hasLabel,
       isElevated: widget.isElevated,
@@ -430,7 +438,7 @@ class _CSCPickerState extends State<CSCPicker> {
       pointerIcon: widget.pointerIcon,
       selectedItemHeight: widget.selectedItemHeight,
       selectedItemPadding: getContentPadding(),
-      selectedIconPadding: widget.selectedIconPadding,
+      selectedIconPadding: getIconPadding(),
       decoration: widget.dropdownDecoration,
       dialogRadius: widget.dropdownDialogRadius,
       searchBarRadius: widget.searchBarRadius,
@@ -468,7 +476,7 @@ class _CSCPickerState extends State<CSCPicker> {
       pointerIcon: widget.pointerIcon,
       selectedItemHeight: widget.selectedItemHeight,
       selectedItemPadding: getContentPadding(),
-      selectedIconPadding: widget.selectedIconPadding,
+      selectedIconPadding: getIconPadding(),
       decoration: widget.dropdownDecoration,
       dialogRadius: widget.dropdownDialogRadius,
       searchBarRadius: widget.searchBarRadius,
